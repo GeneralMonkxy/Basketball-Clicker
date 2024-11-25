@@ -1,98 +1,68 @@
-let totalBuckets = 0;
-let bucketsPerSecond = 0;
-let clicks = 0;
-let upgrades = [];
-let achievements = [];
-let rank = "Beginner";
-let nextRankThreshold = 1000;
-let upgradeCost = 10;
+let bucketCount = 0; // Total buckets scored
+let bps = 0; // Buckets per second
+let totalPlayers = 0; // Track the number of players hired
+let clickingBoostActive = false;
 
-// HTML Elements
-const totalBucketsElem = document.getElementById("totalBuckets");
-const bucketsPerSecondElem = document.getElementById("bucketsPerSecond");
-const clicksElem = document.getElementById("clicks");
-const basketball = document.getElementById("basketball");
-const upgradeListElem = document.getElementById("upgrade-list");
-const achievementsElem = document.getElementById("achievement-list");
-const rankElem = document.getElementById("rank");
-const nextRankElem = document.getElementById("nextRank");
+const shootButton = document.getElementById("basketball");  // Basketball image
+const bucketCountDisplay = document.getElementById("bucketCount");
+const bpsDisplay = document.getElementById("bps");
+const upgradeButtonsContainer = document.getElementById("upgradeButtons");
 
-// Click event for basketball
-basketball.addEventListener("click", () => {
-    totalBuckets++;
-    clicks++;
-    updateStats();
+// Click to score a bucket by clicking the basketball
+shootButton.addEventListener("click", () => {
+  bucketCount += (clickingBoostActive ? 2 : 1); // If boost is active, add 2 buckets per click
+  updateUI();
 });
 
-// Upgrade System
-const upgradesList = [
-    { name: "Kevin Durant", cost: 10, effect: () => { bucketsPerSecond += 1; }, description: "Increases CPS by 1." },
-    { name: "James Harden", cost: 100, effect: () => { bucketsPerSecond += 5; }, description: "Increases CPS by 5." },
-    { name: "LeBron James", cost: 1000, effect: () => { bucketsPerSecond += 10; }, description: "Increases CPS by 10." },
-    { name: "Giannis Antetokounmpo", cost: 5000, effect: () => { bucketsPerSecond += 25; }, description: "Increases CPS by 25." },
-    { name: "Stephen Curry", cost: 20000, effect: () => { bucketsPerSecond += 50; }, description: "Increases CPS by 50." },
-    // Add more upgrades here
-];
+// Function to add a player to the game
+function addPlayer() {
+  totalPlayers++;
+  let cost, bpsIncrease;
 
-upgradesList.forEach((upgrade, index) => {
-    const button = document.createElement("button");
-    button.innerText = `${upgrade.name} (Cost: ${upgrade.cost} buckets)`;
-    button.addEventListener("click", () => {
-        if (totalBuckets >= upgrade.cost) {
-            totalBuckets -= upgrade.cost;
-            upgrade.effect();
-            upgrades.push(upgrade.name);
-            upgradeCost = Math.floor(upgrade.cost * 1.5);
-            button.innerText = `${upgrade.name} (Cost: ${upgradeCost} buckets)`;
-            updateStats();
-            checkAchievements();
-        }
-    });
-    upgradeListElem.appendChild(button);
-});
+  // Determine cost and BPS based on player number
+  if (totalPlayers <= 100) {
+    cost = 100 * totalPlayers;
+    bpsIncrease = totalPlayers * 0.1; // Early game players
+  } else if (totalPlayers <= 500) {
+    cost = 500 + 50 * (totalPlayers - 100);
+    bpsIncrease = 2 + Math.floor((totalPlayers - 100) / 10); // Mid game players
+  } else if (totalPlayers <= 1000) {
+    cost = 1000 + 100 * (totalPlayers - 500);
+    bpsIncrease = 6 + Math.floor((totalPlayers - 500) / 20); // Late game players
+  } else {
+    cost = 5000 + 500 * (totalPlayers - 1000);
+    bpsIncrease = 25 + Math.floor((totalPlayers - 1000) / 50); // Legendary players
+  }
 
-// Achievements
-const checkAchievements = () => {
-    if (totalBuckets >= 100 && !achievements.includes("100 Buckets!")) {
-        achievements.push("100 Buckets!");
-        updateAchievements();
+  // Create the button for this player
+  const playerButton = document.createElement("button");
+  playerButton.textContent = `Hire Player ${totalPlayers} (Cost: ${cost} buckets)`;
+  playerButton.addEventListener("click", () => {
+    if (bucketCount >= cost) {
+      bucketCount -= cost;
+      bps += bpsIncrease; // Add BPS from hired player
+      playerButton.disabled = true; // Disable button after hiring
+      updateUI();
     }
-    if (totalBuckets >= 1000 && !achievements.includes("1,000 Buckets!")) {
-        achievements.push("1,000 Buckets!");
-        updateAchievements();
-    }
-    // Add more achievements here
-};
+  });
 
-const updateAchievements = () => {
-    achievementsElem.innerHTML = "";
-    achievements.forEach(ach => {
-        const li = document.createElement("li");
-        li.innerText = ach;
-        achievementsElem.appendChild(li);
-    });
-};
+  upgradeButtonsContainer.appendChild(playerButton);
+}
 
-// Rank System
-const checkRank = () => {
-    if (totalBuckets >= nextRankThreshold) {
-        rank = "All-Star";
-        nextRankThreshold = nextRankThreshold * 2;
-    }
-    rankElem.innerText = `Rank: ${rank}`;
-    nextRankElem.innerText = `Next Rank: ${nextRankThreshold} Buckets`;
-};
+// Function to update UI with current bucket count and BPS
+function updateUI() {
+  bucketCountDisplay.textContent = bucketCount;
+  bpsDisplay.textContent = bps;
+}
 
-// Update stats
-const updateStats = () => {
-    totalBucketsElem.innerText = `Buckets: ${totalBuckets}`;
-    bucketsPerSecondElem.innerText = `Buckets per second: ${bucketsPerSecond}`;
-    clicksElem.innerText = `Clicks: ${clicks}`;
-    checkRank();
-};
+// Automatically generate players up to a certain point for testing
+for (let i = 1; i <= 10; i++) {
+  addPlayer();
+}
 
-// Auto-generating buckets based on CPS
+// Automatically add buckets based on BPS
 setInterval(() => {
-    totalBuckets += bucketsPerSecond;
-    updateStats();
+  bucketCount += bps;
+  updateUI();
 }, 1000);
+
