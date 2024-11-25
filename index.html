@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basketball Clicker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <h1>Basketball Clicker</h1>
+
+        <!-- Stats display -->
+        <div class="stats">
+            <p id="totalBuckets">Buckets: 0</p>
+            <p id="bucketsPerSecond">Buckets per second: 0</p>
+            <p id="clicks">Clicks: 0</p>
+        </div>
+
+        <!-- Clickable basketball -->
+        <div id="basketball" class="basketball">
+            <img src="basketball.png" alt="Basketball" class="ball-image">
+        </div>
+
+        <!-- Upgrades Section -->
+        <div id="upgrade-list" class="upgrades">
+            <!-- Upgrade Buttons (They will be dynamically added via JS) -->
+        </div>
+
+        <!-- Achievements Section -->
+        <div id="achievements" class="achievements">
+            <h3>Achievements</h3>
+            <ul id="achievement-list">
+                <!-- Achievement list will be dynamically populated -->
+            </ul>
+        </div>
+
+        <!-- Rank Section -->
+        <div id="rank-section" class="rank">
+            <p id="rank">Rank: Beginner</p>
+            <p id="nextRank">Next Rank: 1000 Buckets</p>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
