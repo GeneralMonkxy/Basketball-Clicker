@@ -1,0 +1,29 @@
+body {
+  background-color: black; /* Black background for Kindle */
+  color: white; /* White text for contrast */
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+h1 {
+  margin-top: 20px;
+}
+p {
+  font-size: 24px;
+}
+button {
+  background-color: #444; /* Dark button for basketball */
+  color: white;
+  border: none;
+  border-radius: 50%; /* Make the button circular */
+  width: 100px;
+  height: 100px;
+  font-size: 24px;
+  cursor: pointer;
+  margin: 20px auto;
+  display: block;
+}
+button:hover {
+  background-color: #666; /* Lighter shade on hover */
+}
