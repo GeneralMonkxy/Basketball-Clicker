@@ -7,6 +7,7 @@ const scoreDisplay = document.getElementById('score');
 
 // Add click event to increase score
 basketball.addEventListener('click', () => {
-  score++;
-  scoreDisplay.textContent = score;
+  score++; // Increment the score by 1
+  scoreDisplay.textContent = score; // Update the score display
 });
+
